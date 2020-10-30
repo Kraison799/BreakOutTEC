@@ -14,7 +14,7 @@ import game_objects.Wall;
  *
  */
 public class Level implements Drawable {
-	private Wall easy, medium, hard;
+	private Wall easy, medium, hard, imp;
 	private int lvl;
 	
 	public Level(int lvl) {
@@ -22,6 +22,22 @@ public class Level implements Drawable {
 		this.lvl = lvl;
 	}
 	
+	public Wall getEasy() {
+		return easy;
+	}
+
+	public Wall getMedium() {
+		return medium;
+	}
+
+	public Wall getHard() {
+		return hard;
+	}
+
+	public Wall getImp() {
+		return imp;
+	}
+
 	public int getLvl() {
 		return lvl;
 	}
@@ -40,15 +56,18 @@ public class Level implements Drawable {
 			blocks.add(this.medium.getLine2().get(i));
 			blocks.add(this.hard.getLine1().get(i));
 			blocks.add(this.hard.getLine2().get(i));
+			blocks.add(this.imp.getLine1().get(i));
+			blocks.add(this.imp.getLine2().get(i));
 		}
 		
 		return blocks;
 	}
 
 	public void createWave() {
-		this.easy = new Wall(280*3/2, 96, 1);
-		this.medium = new Wall(280*3/2, 64, 2);
-		this.hard = new Wall(280*3/2, 32, 3);
+		this.easy = new Wall(280*3/2, 128, 1);
+		this.medium = new Wall(280*3/2, 98, 2);
+		this.hard = new Wall(280*3/2, 64, 3);
+		this.imp = new Wall(280*3/2, 32, 4);
 		Random rand = new Random();
 		this.easy.getLine1().get(rand.nextInt(14)).setEffect();
 		this.easy.getLine2().get(rand.nextInt(14)).setEffect();
@@ -56,11 +75,13 @@ public class Level implements Drawable {
 		this.medium.getLine2().get(rand.nextInt(14)).setEffect();
 		this.hard.getLine1().get(rand.nextInt(14)).setEffect();
 		this.hard.getLine2().get(rand.nextInt(14)).setEffect();
+		this.imp.getLine1().get(rand.nextInt(14)).setEffect();
+		this.imp.getLine2().get(rand.nextInt(14)).setEffect();
 	}
 	
 	public boolean destroy() {
 		for (int i = 0; i < 14; i++) {
-			if(!this.easy.getLine1().get(i).destroy() || !this.easy.getLine2().get(i).destroy() || !this.medium.getLine1().get(i).destroy() || !this.medium.getLine2().get(i).destroy() || !this.hard.getLine1().get(i).destroy() || !this.hard.getLine2().get(i).destroy()) {
+			if(!this.easy.getLine1().get(i).destroy() || !this.easy.getLine2().get(i).destroy() || !this.medium.getLine1().get(i).destroy() || !this.medium.getLine2().get(i).destroy() || !this.hard.getLine1().get(i).destroy() || !this.hard.getLine2().get(i).destroy() || !this.imp.getLine1().get(i).destroy() || !this.imp.getLine2().get(i).destroy()) {
 				return false;
 			}
 		}
@@ -72,6 +93,7 @@ public class Level implements Drawable {
 		this.easy.draw(g);
 		this.medium.draw(g);
 		this.hard.draw(g);
+		this.imp.draw(g);
 	}
 
 	@Override
@@ -79,5 +101,6 @@ public class Level implements Drawable {
 		this.easy.update(delta);
 		this.medium.update(delta);
 		this.hard.update(delta);
+		this.imp.update(delta);
 	}
 }

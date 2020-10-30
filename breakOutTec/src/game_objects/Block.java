@@ -13,7 +13,6 @@ import state_machine.Timer;
  */
 public class Block extends MoveableObject implements Drawable {
 	private int resistance, lvl, effect;
-	private Timer timer;
 
 	public Block(int posX, int posY, int width, int height, int resistance) {
 		super(posX, posY, width, height, 0, "Invader_1");
@@ -23,7 +22,11 @@ public class Block extends MoveableObject implements Drawable {
 		
 		this.setRect();
 	}
-	
+
+	public int getLvl() {
+		return lvl;
+	}
+
 	public int getEffect() {
 		return effect;
 	}
@@ -55,8 +58,10 @@ public class Block extends MoveableObject implements Drawable {
 			if (this.lvl == 1) {
 				g.setColor(Color.green);
 			} else if (this.lvl == 2) {
-				g.setColor(Color.orange);
+				g.setColor(Color.yellow);
 			} else if (this.lvl == 3) {
+				g.setColor(Color.orange);
+			} else if (this.lvl == 4) {
 				g.setColor(Color.red);
 			}
 			g.drawRect(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight());

@@ -42,7 +42,7 @@ public class ControllerServer extends Thread {
 			ss = new ServerSocket(port);
 			s = new Socket();
 			
-//			dataOut = String.valueOf(game.getScore()+"/"+game.getLevel().getCurrent().getLineClass()+"/"+game.getLevel().getNext().getLineClass());
+			dataOut = game.getJson().getAllStr();
 			System.out.println(dataOut);
 			
 			while(true) {
@@ -50,11 +50,12 @@ public class ControllerServer extends Thread {
 				System.out.println("Connection established...");
 				input = new BufferedReader(new InputStreamReader(s.getInputStream()));
 				output = new PrintStream(s.getOutputStream());
-				
+
 				dataIn = input.readLine();
 				System.out.println(dataIn);
 				System.out.println("Data received...");
-//				dataOut = (String.valueOf(game.getScore()+"/"+game.getLevel().getCurrent().getLineClass()+"/"+game.getLevel().getNext().getLineClass()));
+				
+				dataOut = game.getJson().getAllStr();
 				output.println(dataOut);
 				System.out.println("Data sent...");
 			}

@@ -28,6 +28,11 @@ public class Player extends MoveableObject implements KeyListener, Drawable {
 		this.alive = true;
 		this.lifes = 5;
 		
+		this.sizeD = false;
+		this.sizeH = false;
+		this.spdP = false;
+		this.spdM = false;
+		
 		Random rand = new Random();
 		
 		this.balls = new LinkedList<Ball>();
@@ -111,10 +116,10 @@ public class Player extends MoveableObject implements KeyListener, Drawable {
 
 	@ Override
 	public void draw(Graphics2D g) {
+		g.setColor(Color.magenta);
+		g.fillRect(this.getPosX(), this.getPosY(), this.getRealWidth(), this.getHeight());
 		g.setColor(Color.black);
 		g.drawRect(this.getPosX(), this.getPosY(), this.getRealWidth(), this.getHeight());
-		g.setColor(Color.white);
-		g.fillRect(this.getPosX(), this.getPosY(), this.getRealWidth(), this.getHeight());
 		for(int r = 0; r < balls.size(); r++) {
 			balls.get(r).draw(g);
 		}
@@ -137,7 +142,7 @@ public class Player extends MoveableObject implements KeyListener, Drawable {
 			
 			if (this.balls.get(r).getPosY() >= 200*3+10) {
 				this.balls.remove(r);
-//				this.loseLife();
+				this.loseLife();
 				if (this.balls.size() == 0) {
 					this.newBall();
 				}

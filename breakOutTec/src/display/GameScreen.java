@@ -47,6 +47,7 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 		timerSpd = new Timer();
 		
 		this.setServer();
+		this.json = new jsonManager();
 		
 		try {
 			URL url = this.getClass().getResource("/images/Background.png");
@@ -54,9 +55,13 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 		} catch(IOException e) {e.printStackTrace();}
 	}
 	
+	public jsonManager getJson() {
+		return json;
+	}
+
 	public void setServer() {
 		this.server = new ControllerServer(this);
-		server.start();
+//		server.start();
 	}
 	
 	public void reset() {
@@ -161,6 +166,10 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 				if (!level.getBlocks().get(r).destroy() && player.getBalls().get(i).isColliding(level.getBlocks().get(r))) {
 					level.getBlocks().get(r).hit();
 					player.getBalls().get(i).changeDirY();
+					
+					if (level.getBlocks().get(r).destroy()) {
+						this.score += 100*level.getBlocks().get(r).getLvl();
+					}
 
 					if (level.getBlocks().get(r).getEffect() == 0) {
 						player.newBall();
@@ -172,12 +181,14 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 						timerSize.resetTimer();
 						player.setSizeD(false);
 						player.setSizeH(true);
+					} else if (level.getBlocks().get(r).getEffect() == 3) {
+						timerSpd.resetTimer();
+					} else if (level.getBlocks().get(r).getEffect() == 4) {
+						timerSpd.resetTimer();
 					}
 				}
 			}
 		}
-		// Loop to destroy the player
-		
 		// Timers check
 		if (timerSize.isTimerReady(5000)) {
 			player.setSizeD(false);
@@ -186,6 +197,14 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 		// Update for the objects in the screen
 		player.update(delta);
 		level.update(delta);
+		
+		json.updatePlayer(player, levelCounter, score);
+		json.updateBalls(player);
+		json.updateEasy(level.getEasy());
+		json.updateMedium(level.getMedium());
+		json.updateHard(level.getHard());
+		json.updateImp(level.getImp());
+		json.update();
 	}
 
 	@Override
@@ -202,6 +221,10 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 			this.getStateMachine().setState((byte) 0);
 		} else if(key == KeyEvent.VK_P) {
 			this.getStateMachine().setState((byte) 2);
+		} else if(key == KeyEvent.VK_J) {
+			System.out.printf(json.getAllStr());
+		} else if(key == KeyEvent.VK_B) {
+			this.player.newBall();
 		}
 	}
 
