@@ -61,7 +61,7 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 
 	public void setServer() {
 		this.server = new ControllerServer(this);
-//		server.start();
+		server.start();
 	}
 	
 	public void reset() {

@@ -40,7 +40,7 @@ public class ControllerServer extends Thread {
 		try {
 			System.out.println("Searching connection...");
 			ss = new ServerSocket(port);
-			s = new Socket();
+			s = ss.accept();
 			
 			dataOut = game.getJson().getAllStr();
 			System.out.println(dataOut);

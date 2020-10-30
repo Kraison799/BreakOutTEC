@@ -1,5 +1,8 @@
 package server;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -150,6 +153,13 @@ public class jsonManager {
 		ja.put("hard", this.imp);
 		ja.put("balls", this.balls);
 		this.all = ja;
+		
+		try (FileWriter file = new FileWriter("server-data.json")) {
+			file.write(this.all.toJSONString());
+			file.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public JSONObject getAll() {

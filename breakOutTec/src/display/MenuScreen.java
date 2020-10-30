@@ -23,7 +23,7 @@ import state_machine.SuperStateMachine;
 public class MenuScreen extends SuperStateMachine implements KeyListener {
 	private Font titleFont = new Font("Arial", Font.PLAIN, 64);
 	private Font startFont = new Font("Arial", Font.PLAIN, 32);
-	private String title = "Space Battle";
+	private String title = "Break Out";
 	private String start = "Press Enter";
 	
 	private BufferedImage bg;
