@@ -31,6 +31,10 @@ public abstract class MoveableObject extends GameObject {
 		this.rect = new Rectangle(this.getPosX(), this.getPosY(), this.getWidth(), this.getHeight());
 	}
 	
+	public void setRect(Rectangle rect) {
+		this.rect = rect;
+	}
+	
 	public boolean isColliding(MoveableObject other) {
 		collide = other.getRect().intersects(this.getRect());
 		return collide;

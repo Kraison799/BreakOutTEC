@@ -2,6 +2,9 @@ package game_objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.Random;
+
+import state_machine.Timer;
 
 /**
  * This class creates an enemy to be added in the enemy line.
@@ -9,14 +12,29 @@ import java.awt.Graphics2D;
  *
  */
 public class Block extends MoveableObject implements Drawable {
-	private int resistance, lvl;
+	private int resistance, lvl, effect;
+	private Timer timer;
 
 	public Block(int posX, int posY, int width, int height, int resistance) {
 		super(posX, posY, width, height, 0, "Invader_1");
 		this.lvl = resistance;
-		this.resistance = resistance*2;
+		this.resistance = resistance;
+		this.effect = -1;
 		
 		this.setRect();
+	}
+	
+	public int getEffect() {
+		return effect;
+	}
+
+	public void setEffect() {
+		Random rand = new Random();
+		this.effect = rand.nextInt(5);
+	}
+	
+	public void eraseEffect() {
+		this.effect = -1;
 	}
 	
 	public boolean destroy() {

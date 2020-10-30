@@ -2,8 +2,10 @@ package game_objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 import adt.LinkedList;
 import state_machine.Timer;
@@ -16,7 +18,6 @@ import state_machine.Timer;
 public class Player extends MoveableObject implements KeyListener, Drawable {
 	private boolean right, left, alive, sizeD, sizeH, spdP, spdM;
 	private int lifes;
-	private Timer timer;
 	
 	private LinkedList<Ball> balls = new LinkedList<Ball>();
 
@@ -27,14 +28,47 @@ public class Player extends MoveableObject implements KeyListener, Drawable {
 		this.alive = true;
 		this.lifes = 5;
 		
-		this.balls = new LinkedList<Ball>();
+		Random rand = new Random();
 		
-		this.timer = new Timer();
+		this.balls = new LinkedList<Ball>();
+		this.balls.add(new Ball(this.getPosX(), this.getPosY()-30, 16, 16, rand.nextInt(11) -5, -6, "MissileSprite"));
 	}
 	
+	public boolean isSizeD() {
+		return sizeD;
+	}
+
+	public void setSizeD(boolean sizeD) {
+		this.sizeD = sizeD;
+	}
+
+	public boolean isSizeH() {
+		return sizeH;
+	}
+
+	public void setSizeH(boolean sizeH) {
+		this.sizeH = sizeH;
+	}
+
+	public boolean isSpdP() {
+		return spdP;
+	}
+
+	public void setSpdP(boolean spdP) {
+		this.spdP = spdP;
+	}
+
+	public boolean isSpdM() {
+		return spdM;
+	}
+
+	public void setSpdM(boolean spdM) {
+		this.spdM = spdM;
+	}
+
 	public void newBall() {
-		Ball ball = new Ball(this.getPosX()+22, this.getPosY()-30, 10, 30, -6, "MissileSprite");
-		balls.add(ball);
+		Random rand = new Random();
+		balls.add(new Ball(this.getPosX(), this.getPosY()-30, 16, 16, rand.nextInt(11) -5, -6, "MissileSprite"));
 	}
 	
 	public LinkedList<Ball> getBalls() {
@@ -86,10 +120,28 @@ public class Player extends MoveableObject implements KeyListener, Drawable {
 		}
 	}
 	
+	@Override
+	public void setRect() {
+		this.setRect(new Rectangle(this.getPosX(), this.getPosY(), this.getRealWidth(), this.getHeight()));
+	}
+	
 	@ Override
 	public void update(double delta) {
+		this.setRect();
+		
 		for(int r = 0; r < balls.size(); r++) {
-			balls.get(r).update(delta);
+			this.balls.get(r).update(delta);
+			if (this.balls.get(r).isColliding(this)) {
+				this.balls.get(r).changeDirY();
+			}
+			
+			if (this.balls.get(r).getPosY() >= 200*3+10) {
+				this.balls.remove(r);
+//				this.loseLife();
+				if (this.balls.size() == 0) {
+					this.newBall();
+				}
+			}
 		}
 		
 		if(right && !left && this.getPosX() < 280*3-this.getRealWidth()+10) {
@@ -107,6 +159,8 @@ public class Player extends MoveableObject implements KeyListener, Drawable {
 			right = true;
 		} else if(key == KeyEvent.VK_LEFT) {
 			left = true;
+		} else if(key == KeyEvent.VK_B) {
+			this.newBall();
 		}
 	}
 

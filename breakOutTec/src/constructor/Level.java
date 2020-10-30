@@ -1,7 +1,10 @@
 package constructor;
 
 import java.awt.Graphics2D;
+import java.util.Random;
 
+import adt.LinkedList;
+import game_objects.Block;
 import game_objects.Drawable;
 import game_objects.Wall;
 
@@ -26,11 +29,33 @@ public class Level implements Drawable {
 	public void setLvl(int lvl) {
 		this.lvl = lvl;
 	}
+	
+	public LinkedList<Block> getBlocks() {
+		LinkedList<Block> blocks = new LinkedList<Block>();
+		
+		for (int i = 0; i < 14; i++) {
+			blocks.add(this.easy.getLine1().get(i));
+			blocks.add(this.easy.getLine2().get(i));
+			blocks.add(this.medium.getLine1().get(i));
+			blocks.add(this.medium.getLine2().get(i));
+			blocks.add(this.hard.getLine1().get(i));
+			blocks.add(this.hard.getLine2().get(i));
+		}
+		
+		return blocks;
+	}
 
 	public void createWave() {
-		this.easy = new Wall(280*3/2, 96, 3);
+		this.easy = new Wall(280*3/2, 96, 1);
 		this.medium = new Wall(280*3/2, 64, 2);
-		this.hard = new Wall(280*3/2, 32, 1);
+		this.hard = new Wall(280*3/2, 32, 3);
+		Random rand = new Random();
+		this.easy.getLine1().get(rand.nextInt(14)).setEffect();
+		this.easy.getLine2().get(rand.nextInt(14)).setEffect();
+		this.medium.getLine1().get(rand.nextInt(14)).setEffect();
+		this.medium.getLine2().get(rand.nextInt(14)).setEffect();
+		this.hard.getLine1().get(rand.nextInt(14)).setEffect();
+		this.hard.getLine2().get(rand.nextInt(14)).setEffect();
 	}
 	
 	public boolean destroy() {

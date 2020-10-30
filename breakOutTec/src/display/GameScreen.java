@@ -18,6 +18,7 @@ import server.ControllerServer;
 import server.jsonManager;
 import state_machine.StateMachine;
 import state_machine.SuperStateMachine;
+import state_machine.Timer;
 
 /**
  * This class run the game and draw the screen for it.
@@ -27,6 +28,7 @@ import state_machine.SuperStateMachine;
 public class GameScreen extends SuperStateMachine implements KeyListener {
 	private Player player;
 	private Level level;
+	private Timer timerSize, timerSpd;
 	private int levelCounter;
 	private int score;
 	private BufferedImage bg;
@@ -41,6 +43,8 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 		level = new Level(1);
 		levelCounter = 1;
 		score = 0;
+		timerSize = new Timer();
+		timerSpd = new Timer();
 		
 		this.setServer();
 		
@@ -57,7 +61,7 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 	
 	public void reset() {
 		level = new Level(1);
-		player = new Player(280*3/2-25, 360/16*9*3-55, 50, 50, "Spaceship_1");
+		player = new Player(280*3/2-32, 360/16*9*3-16, 64, 8, "Spaceship_1");
 		levelCounter = 1;
 		score = 0;
 	}
@@ -151,11 +155,34 @@ public class GameScreen extends SuperStateMachine implements KeyListener {
 			level = new Level(levelCounter);
 		}
 		// Loop to destroy enemies
-		
+		for (int i = 0; i < player.getBalls().size(); i++) {
+			int c = level.getBlocks().size();
+			for (int r = 0; r < c; r++) {
+				if (!level.getBlocks().get(r).destroy() && player.getBalls().get(i).isColliding(level.getBlocks().get(r))) {
+					level.getBlocks().get(r).hit();
+					player.getBalls().get(i).changeDirY();
+
+					if (level.getBlocks().get(r).getEffect() == 0) {
+						player.newBall();
+					} else if (level.getBlocks().get(r).getEffect() == 1) {
+						timerSize.resetTimer();
+						player.setSizeH(false);
+						player.setSizeD(true);
+					} else if (level.getBlocks().get(r).getEffect() == 2) {
+						timerSize.resetTimer();
+						player.setSizeD(false);
+						player.setSizeH(true);
+					}
+				}
+			}
+		}
 		// Loop to destroy the player
 		
-		// Loop to get collisions between enemies and the player
-		
+		// Timers check
+		if (timerSize.isTimerReady(5000)) {
+			player.setSizeD(false);
+			player.setSizeH(false);
+		}
 		// Update for the objects in the screen
 		player.update(delta);
 		level.update(delta);
